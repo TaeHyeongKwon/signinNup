@@ -31,9 +31,9 @@ module.exports = {
       },
       nickname: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      content: {
+      comment: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },

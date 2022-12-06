@@ -42,9 +42,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       nickname: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      content: {
+      comment: {
         type: DataTypes.STRING,
         allowNull: false,
       },

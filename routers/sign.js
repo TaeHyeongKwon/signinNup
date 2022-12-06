@@ -5,7 +5,7 @@ const { Users } = require("../models");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize"); // ?이건 조건줄때 사용하는 건데 어떻게 쓰는건가??
 
-//회원가입 기능
+//회원가입 기능 에러 헨들링 필요함!!
 router.post("/signup", async (req, res) => {
   const { nickname, password, confirm } = req.body;
   // if (password !== confirm) {
@@ -38,7 +38,6 @@ router.post("/login", async (req, res) => {
         .json({ Message: "닉네임 또는 패스워드를 확인 해 주세요" });
     }
     const token = jwt.sign({ userId: user.userId }, "secret-key");
-    //여기 암호키는 그냥 암꺼나 써도 되나???? .env 쓰는법
     res.cookie("token", token);
     return res.json({ Message: "로그인 완료", token });
   } catch (error) {

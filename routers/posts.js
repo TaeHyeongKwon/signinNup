@@ -55,7 +55,7 @@ router.get("/", auth, async (req, res) => {
 // });
 
 //게시글 상세조회
-// Users 테이블에서 nickname 값을 긁어와야함
+// Users 테이블에서 nickname 값을 긁어와야함 근데 findByPk(postId)
 router.get("/:postId", auth, async (req, res) => {
   try {
     const { postId } = req.params;
@@ -68,6 +68,39 @@ router.get("/:postId", auth, async (req, res) => {
 });
 
 //게시글 수정
-router.put("/:postId", auth, async (req, res) => {});
+router.put("/:postId", auth, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { title, content } = req.body;
+    if (!title || !content)
+      return res
+        .status(400)
+        .json({ message: "데이터 형식이 올바르지 않습니다.3" });
+    const posts = await Posts.findByPk(postId);
+    if (posts) {
+      await Posts.update(
+        { title: title, content: content },
+        { where: { postId } }
+      );
+      return res.status(201).json({ message: "게시글을 수정하였습니다." });
+    }
+  } catch (err) {
+    return res.status(404).json({ message: "게시글 조회에 실패하였습니다." });
+  }
+});
 
+//게시글 삭제//에러 잡는 조건을 더 넣어줘야함
+router.delete("/:postId", auth, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const posts = await Posts.findByPk(postId);
+    if (posts) {
+      await Posts.destroy({ where: { postId } });
+    }
+    return res.json({ message: "게시글을 삭제하였습니다." });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({ message: "게시글 삭제에 실패하였습니다." });
+  }
+});
 module.exports = router;
