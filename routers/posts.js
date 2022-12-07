@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Posts } = require("../models");
+const { Posts, Postlikes, sequelize } = require("../models");
 const auth = require("../middleware/auth");
 
 //게시글 생성
@@ -17,17 +17,28 @@ router.post("/", auth, async (req, res) => {
     await Posts.create({ title, content, userId, nickname });
     res.json({ message: "게시글 작성에 성공하였습니다." });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ errorMessage: "게시글 작성에 실패하였습니다." });
   }
 });
 
-//게시글 목록 조회
-//좋아요 갯수 추가 (현재null) 필요
+//게시글 목록 조회 좋아요 갯수 추가 (현재null) 필요
 router.get("/", async (req, res) => {
   try {
     const data = await Posts.findAll({
-      attributes: { exclude: ["content"] },
+      // attributes: { exclude: ["content"] }
       order: [["postId", "DESC"]],
+      include: [{ model: Postlikes, attributes: [] }],
+      attributes: [
+        "postId",
+        "userId",
+        "nickname",
+        "title",
+        "createdAt",
+        "updatedAt",
+        [sequelize.fn("COUNT", sequelize.col("Postlikes.userId")), "likes"],
+      ],
+      group: "postId",
     });
     res.json({ data });
   } catch (err) {

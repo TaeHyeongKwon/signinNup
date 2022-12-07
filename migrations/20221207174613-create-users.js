@@ -9,24 +9,22 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
+      password: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+      },
       nickname: {
         type: Sequelize.DataTypes.STRING,
         unique: true,
         allowNull: false,
       },
-      password: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
       createdAt: {
-        type: Sequelize.DataTypes.DATE,
         allowNull: false,
-        DafaultValue: Sequelize.DataTypes.NOW,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
-        type: Sequelize.DataTypes.DATE,
         allowNull: false,
-        DafaultValue: Sequelize.DataTypes.NOW,
+        type: Sequelize.DataTypes.DATE,
       },
     });
   },

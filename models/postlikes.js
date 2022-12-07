@@ -4,8 +4,6 @@ module.exports = (sequelize, DataTypes) => {
   class Postlikes extends Model {
     static associate(models) {
       this.belongsTo(models.Posts, { foreignKey: "postId" });
-      this.belongsTo(models.Users, { foreignKey: "userId" });
-      this.hasMany(models.Posts, { As: "Posts", foreignKey: "postlikeId" });
     }
   }
   Postlikes.init(
@@ -16,17 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      postId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Posts",
-          key: "postId",
-        },
-        onDelete: "cascade",
-      },
+      // postId: {
+      //   type: DataTypes.STRING,
+      //   allowNull: false,
+      //   onDelete: "cascade",
+      // },
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: "Users",
@@ -37,12 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
     },
     {

@@ -3,10 +3,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Posts extends Model {
     static associate(models) {
-      this.belongsTo(models.Users, { foreignKey: "userId" });
-      this.belongsTo(models.Postlikes, { foreignKey: "postlikeId" });
-      this.hasMany(models.Comments, { AS: "Comment", foreignKey: "postId" });
-      this.hasMany(models.Postlikes, { AS: "Postlikes", foreignKey: "postId" });
+      this.hasMany(models.Postlikes, { foreignKey: "postId" });
     }
   }
   Posts.init(
@@ -19,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "Users",
           key: "userId",
@@ -28,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       nickname: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       title: {
         type: DataTypes.STRING,
@@ -38,15 +35,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      // likes: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      //   defaultValue: 0,
+      // },
       createdAt: {
-        allowNull: true,
+        allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
       updatedAt: {
-        allowNull: true,
+        allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
     },
     {

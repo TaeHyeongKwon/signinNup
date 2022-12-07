@@ -8,15 +8,13 @@ router.post("/signup", async (req, res) => {
   try {
     const { nickname, password, confirm } = req.body;
     const users = await Users.findOne({ where: { nickname } });
-    const regex = /^[|a-z|A-Z|0-9|]+$/;
-    if (nickname == users.nickname) {
-      res.status(412).json({ errorMessage: "중복된 닉네임 입니다." });
-      return;
-    } else if (nickname < 3 || !regex.test(nickname)) {
-      res
+    const regex = /^[a-zA-Z0-9]{3,}$/;
+    if (users) {
+      return res.status(412).json({ errorMessage: "중복된 닉네임 입니다." });
+    } else if (!nickname.match(regex)) {
+      return res
         .status(412)
         .json({ errorMessage: "닉네임의 형식이 일치하지 않습니다." });
-      return;
     } else if (password !== confirm) {
       res.status(412).json({ errorMessage: "패스워드가 일치하지 않습니다." });
       return;
@@ -48,7 +46,7 @@ router.post("/login", async (req, res) => {
   try {
     const { nickname, password } = req.body;
     const user = await Users.findOne({ where: { nickname } });
-    if (!user || password !== user.password) {
+    if (!user || password != user.password) {
       return res
         .status(412)
         .json({ Message: "닉네임 또는 패스워드를 확인 해 주세요" });

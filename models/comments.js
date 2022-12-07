@@ -3,8 +3,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Comments extends Model {
     static associate(models) {
-      this.belongsTo(models.Posts, { foreignKey: "postId" });
-      this.belongsTo(models.Users, { foreignKey: "userId" });
+      // define association here
     }
   }
   Comments.init(
@@ -16,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       postId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: "Posts",
@@ -25,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "cascade",
       },
       userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: "Users",
@@ -35,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       nickname: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       comment: {
         type: DataTypes.STRING,
@@ -44,12 +43,10 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
-        DafaultValue: DataTypes.NOW,
       },
     },
     {

@@ -3,6 +3,7 @@ const router = express.Router();
 const { Posts, Postlikes } = require("../models");
 const auth = require("../middleware/auth");
 
+//게시글 좋아요
 router.put("/:postId/like", auth, async (req, res) => {
   try {
     const { userId } = res.locals.user;
@@ -13,8 +14,8 @@ router.put("/:postId/like", auth, async (req, res) => {
         .status(404)
         .json({ errorMessage: "게시글이 존재하지 않습니다." });
     }
-    const user = await Postlikes.findOne({ where: { postId, userId } });
-    if (!user) {
+    const postlike = await Postlikes.findOne({ where: { postId, userId } });
+    if (!postlike) {
       await Postlikes.create({ userId, postId });
       return res.json({ userId, postId, result: true });
     } else {

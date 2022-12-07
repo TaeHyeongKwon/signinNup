@@ -25,3 +25,5 @@ module.exports = async (req, res, next) => {
     });
   }
 };
+
+//로그인 토큰을 전달한 채로 로그인 API 또는 회원가입 API를 호출한 경우 "이미 로그인이 되어있습니다."라는 에러 메세지를 response에 포함하기
