@@ -13,11 +13,10 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          // 관계를 맺는다.
-          model: "Users", // Users 테이블의
-          key: "userId", // userId 컬럼과
+          model: "Users",
+          key: "userId",
         },
-        onDelete: "cascade", // Users 테이블의 데이터가 사라질 경우 post도 사라진다.
+        onDelete: "cascade",
       },
       nickname: {
         type: Sequelize.DataTypes.STRING,
@@ -29,6 +28,10 @@ module.exports = {
       },
       content: {
         type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      likes: {
+        type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
       },
       createdAt: {

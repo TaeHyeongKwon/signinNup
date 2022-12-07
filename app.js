@@ -3,15 +3,6 @@ const express = require("express");
 const indexRouter = require("./routers");
 const app = express();
 const port = 3000;
-const { sequelize } = require("./models");
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("시퀄라이즈 연결성공");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
 
 app.use(express.json());
 app.use(cookieParser());

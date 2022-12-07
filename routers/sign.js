@@ -1,24 +1,40 @@
 const express = require("express");
 const router = express.Router();
-
 const { Users } = require("../models");
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize"); // ?이건 조건줄때 사용하는 건데 어떻게 쓰는건가??
 
-//회원가입 기능 에러 헨들링 필요함!!
+//회원가입 기능
 router.post("/signup", async (req, res) => {
-  const { nickname, password, confirm } = req.body;
-  // if (password !== confirm) {
-  //     res.status(412).json({ errorMessage: "패스워드가 일치하지 않습니다." })
-  //     return
-  // }
-  // if (password.length < 4 ) {
-  //     res.status(412).json({ errorMessage: "패스워드에 닉네임이 포함되어 있습니다." })
-  //     return
-  // }
-  // 모델에서 validate로 커스터마이징을 만들어서 password랑 nickname를 관리하는게 나은가??
-  await Users.create({ nickname, password });
-  res.status(201).json({ message: "회원가입 완료" });
+  try {
+    const { nickname, password, confirm } = req.body;
+    const users = await Users.findOne({ where: { nickname } });
+    const regex = /^[|a-z|A-Z|0-9|]+$/;
+    if (nickname == users.nickname) {
+      res.status(412).json({ errorMessage: "중복된 닉네임 입니다." });
+      return;
+    } else if (nickname < 3 || !regex.test(nickname)) {
+      res
+        .status(412)
+        .json({ errorMessage: "닉네임의 형식이 일치하지 않습니다." });
+      return;
+    } else if (password !== confirm) {
+      res.status(412).json({ errorMessage: "패스워드가 일치하지 않습니다." });
+      return;
+    } else if (password.length < 4 || password.includes(nickname)) {
+      res.status(412).json({
+        errorMessage:
+          "패스워드 형식이 일치하지 않거나, 패스워드에 닉네임이 포함되어 있습니다",
+      });
+      return;
+    }
+    await Users.create({ nickname, password });
+    return res.status(201).json({ message: "회원가입 완료" });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(400)
+      .json({ errorMessage: "요청한 데이터 형식이 올바르지 않습니다." });
+  }
 });
 
 //회원가입 데이터 확인 나중에 꼭 지울 것!
@@ -37,7 +53,10 @@ router.post("/login", async (req, res) => {
         .status(412)
         .json({ Message: "닉네임 또는 패스워드를 확인 해 주세요" });
     }
-    const token = jwt.sign({ userId: user.userId }, "secret-key");
+    const token = jwt.sign(
+      { userId: user.userId, nickname: user.nickname },
+      "secret-key"
+    );
     res.cookie("token", token);
     return res.json({ Message: "로그인 완료", token });
   } catch (error) {
@@ -45,4 +64,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
+//로그아웃을 만들어 보고 싶군..
+// router.delete("/logout", auth, async (req, res) => {});
 module.exports = router;

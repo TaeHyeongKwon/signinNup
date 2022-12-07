@@ -2,11 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       this.hasMany(models.Posts, { as: "Posts", foreignKey: "userId" });
       this.hasMany(models.Comments, { as: "Comments", foreignKey: "userId" });
@@ -16,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
   Users.init(
     {
       userId: {
-        allowNull: false, //  Null을 허용하지 않음
-        autoIncrement: true, // AUTO_INCREMENT 기본키에 데이터를 넣지 않으면 자동적으로 1씩 증가한 데이터가 삽입됨
-        primaryKey: true, // PRIMARY KEY, 기본키
-        type: DataTypes.INTEGER, // int
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
       },
       nickname: {
         type: DataTypes.STRING,
@@ -33,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        DafaultValue: DataTypes.NOW, //아무런 데이터도 넣지 않았을때 기본적으로 설정되는 값
+        DafaultValue: DataTypes.NOW,
       },
       updatedAt: {
         type: DataTypes.DATE,
