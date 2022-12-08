@@ -47,8 +47,6 @@ router.get("/", async (req, res) => {
 });
 
 //좋아요 게시글 조회
-//Postlikes테이블에 있는 현재 로그인한 userId와 일치하는 userId에 해당하는 postId를가지고 와서
-// 이 postId에 해당하는 내용을 보여주면 된다.
 router.get("/like", auth, async (req, res) => {
   try {
     const { userId } = res.locals.user;
