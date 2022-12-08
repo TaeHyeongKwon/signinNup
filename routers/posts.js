@@ -22,11 +22,10 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-//게시글 목록 조회 좋아요 갯수 추가 (현재null) 필요
+//게시글 목록 조회
 router.get("/", async (req, res) => {
   try {
     const data = await Posts.findAll({
-      // attributes: { exclude: ["content"] }
       order: [["postId", "DESC"]],
       include: [{ model: Postlikes, attributes: [] }],
       attributes: [
@@ -44,6 +43,40 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).json({ errorMessage: "게시글 조회에 실패하였습니다.1" });
+  }
+});
+
+//좋아요 게시글 조회
+//Postlikes테이블에 있는 현재 로그인한 userId와 일치하는 userId에 해당하는 postId를가지고 와서
+// 이 postId에 해당하는 내용을 보여주면 된다.
+router.get("/like", auth, async (req, res) => {
+  try {
+    const { userId } = res.locals.user;
+    const userLikes = await Postlikes.findAll({
+      where: { userId },
+      include: [
+        {
+          model: Posts,
+          attributes: [
+            "postId",
+            "userId",
+            "nickname",
+            "title",
+            "createdAt",
+            "updatedAt",
+            [sequelize.fn("COUNT", sequelize.col("Postlikes.userId")), "likes"],
+          ],
+          group: "postId",
+        },
+      ],
+      attributes: [],
+    });
+    res.json({ userLikes });
+  } catch {
+    console.log(error);
+    res
+      .status(400)
+      .json({ errorMessage: "좋아요 게시글 조회에 실패하였습니다." });
   }
 });
 
@@ -112,4 +145,5 @@ router.delete("/:postId", auth, async (req, res) => {
     return res.status(400).json({ message: "게시글 삭제에 실패하였습니다." });
   }
 });
+
 module.exports = router;

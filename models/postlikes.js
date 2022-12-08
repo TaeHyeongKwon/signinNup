@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      // postId: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      //   onDelete: "cascade",
-      // },
       userId: {
         type: DataTypes.STRING,
         allowNull: false,

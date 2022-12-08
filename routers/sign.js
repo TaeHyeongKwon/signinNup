@@ -62,6 +62,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//로그아웃을 만들어 보고 싶군..
-// router.delete("/logout", auth, async (req, res) => {});
 module.exports = router;

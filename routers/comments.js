@@ -8,21 +8,22 @@ router.post("/:postId", auth, async (req, res) => {
   try {
     const { comment } = req.body;
     const { postId } = req.params;
-    const { userId } = res.locals.user;
+    const { userId, nickname } = res.locals.user;
     const post = await Posts.findByPk(postId);
-    if (comment === "") {
+    if (comment == "") {
       return res
         .status(400)
         .json({ errorMessage: "댓글 내용을 입력해주세요." });
     } else {
       if (postId == post.postId) {
-        await Comments.create({ userId, comment, postId });
+        await Comments.create({ userId, nickname, comment, postId });
         return res.json({ message: "댓글을 작성하였습니다." });
       } else {
         throw err;
       }
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ errorMessage: "댓글 작성에 실패하였습니다." });
   }
 });
@@ -33,13 +34,11 @@ router.get("/:postId", async (req, res) => {
     const data = await Comments.findAll({
       attributes: { exclude: ["postId"] },
       order: [["commentId", "DESC"]],
-      include: { model: Users, attributes: ["nickname"] },
-      raw: true,
     });
     res.json({ data });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ errorMessage: "댓글 작성에 실패하였습니다." });
+    res.status(400).json({ errorMessage: "댓글 조회에 실패하였습니다." });
   }
 });
 
